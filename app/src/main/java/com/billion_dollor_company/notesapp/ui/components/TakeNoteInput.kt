@@ -30,10 +30,11 @@ fun NoteInputTextField(
     modifier: Modifier = Modifier,
     text: String,
     label: String,
-    maxLine: Int = 1,
+    maxLine: Int = 20,
     onTextChange: (String) -> Unit = {},
     imeAction: ImeAction,
     onImeAction: () -> Unit = {},
+    capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     OutlinedTextField(
@@ -48,7 +49,8 @@ fun NoteInputTextField(
             color = MaterialTheme.colorScheme.onBackground
         ),
         keyboardOptions = KeyboardOptions(
-            imeAction = imeAction
+            imeAction = imeAction,
+            capitalization = capitalization
         ),
         keyboardActions = KeyboardActions(
             onDone = {

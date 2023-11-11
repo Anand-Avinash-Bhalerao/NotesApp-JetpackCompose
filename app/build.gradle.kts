@@ -1,8 +1,11 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -90,4 +93,8 @@ dependencies {
 
     //coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 }

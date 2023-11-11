@@ -7,8 +7,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -33,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,8 +45,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.billion_dollor_company.notesapp.model.NoteInfo
 import com.billion_dollor_company.notesapp.ui.components.NoteInputTextField
 import com.billion_dollor_company.notesapp.util.formatDate
@@ -51,11 +58,11 @@ import com.billion_dollor_company.notesapp.util.formatDate
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun NoteScreen(
-    notesList: List<NoteInfo>,
-    onAddNote: (NoteInfo) -> Unit = {},
-    onDeleteNote: (NoteInfo) -> Unit = {}
+fun HomeScreen(
+    addNote: () -> Unit
 ) {
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val notesList = homeViewModel.noteInfoList.collectAsState().value
     val context = LocalContext.current
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -79,11 +86,10 @@ fun NoteScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        Toast.makeText(context, "Button clicked", Toast.LENGTH_SHORT).show()
+                        addNote()
                     },
                     shape = CircleShape,
-
-                    ) {
+                ) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add a note"
@@ -95,62 +101,12 @@ fun NoteScreen(
                 modifier = Modifier
                     .padding(it)
             ) {
-                val context = LocalContext.current
-                var title by remember {
-                    mutableStateOf("")
-                }
-                var description by remember {
-                    mutableStateOf("")
-                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    NoteInputTextField(
-                        label = "Title",
-                        text = title,
-                        onTextChange = {
-                            title = it
-                        },
-                        imeAction = ImeAction.Next,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    NoteInputTextField(
-                        label = "Add a note",
-                        text = description,
-                        onTextChange = {
-                            description = it
-                        },
-                        imeAction = ImeAction.Done,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 12.dp)
-                    )
-
-                    Button(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .padding(top = 24.dp),
-
-                        onClick = {
-                            if (title.isNotEmpty() and description.isNotEmpty()) {
-                                onAddNote(NoteInfo(title = title, description = description))
-                                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
-                                title = ""
-                                description = ""
-
-                            }
-                        }
-                    ) {
-                        Text(text = "Save")
-                    }
-
-                    Divider(
-                        Modifier.padding(vertical = 12.dp)
-                    )
-
                     LazyVerticalStaggeredGrid(
                         columns = StaggeredGridCells.Fixed(2),
                         verticalItemSpacing = 4.dp,
@@ -158,12 +114,11 @@ fun NoteScreen(
                         content = {
                             items(notesList) { note ->
                                 InfoCard(note) {
-                                    onDeleteNote(note)
+//                                    homeViewModel.deleteNote(note)
                                 }
                             }
                         }
                     )
-
                 }
             }
         }
@@ -190,11 +145,29 @@ fun InfoCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp)
+                    .padding(12.dp),
+                horizontalAlignment = Alignment.End
             ) {
-                Text(text = noteInfo.title)
-                Text(text = noteInfo.description)
-                Text(text = formatDate(noteInfo.entryDate.time))
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = noteInfo.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = noteInfo.description,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = formatDate(noteInfo.entryDate.time),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Thin
+                )
             }
         }
     }

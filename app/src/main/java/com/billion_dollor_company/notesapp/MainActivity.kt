@@ -8,9 +8,10 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import com.billion_dollor_company.notesapp.ui.screen.home.NoteScreen
-import com.billion_dollor_company.notesapp.ui.screen.home.NoteViewModel
+import com.billion_dollor_company.notesapp.ui.screen.home.HomeScreen
+import com.billion_dollor_company.notesapp.ui.screen.home.HomeViewModel
 import com.billion_dollor_company.notesapp.ui.theme.NotesAppTheme
+import com.billion_dollor_company.notesapp.util.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,26 +21,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             NotesAppTheme {
-                val noteViewModel : NoteViewModel by viewModels()
-                NotesApp(noteViewModel)
+                Navigation()
             }
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun NotesApp(notesViewModel: NoteViewModel) {
-
-    val notesList = notesViewModel.noteInfoList.collectAsState().value
-
-    NoteScreen(
-        notesList = notesList,
-        onAddNote = { note ->
-            notesViewModel.addNote(note)
-        },
-        onDeleteNote = { note ->
-            notesViewModel.deleteNote(note)
-        }
-    )
 }
