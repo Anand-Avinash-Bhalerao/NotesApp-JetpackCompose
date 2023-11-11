@@ -1,7 +1,6 @@
 package com.billion_dollor_company.notesapp.ui.screen.home
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,18 +16,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 @RequiresApi(Build.VERSION_CODES.O)
-class NoteViewModel @Inject constructor(private val repository: NoteRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(private val repository: NoteRepository) : ViewModel() {
 
-
-    private val _noteInfoList = MutableStateFlow<List<NoteInfo>>(emptyList())
-    val noteInfoList = _noteInfoList.asStateFlow()
+    private val stateFlow = MutableStateFlow<List<NoteInfo>>(emptyList())
+    val noteInfoList = stateFlow.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllNotes().distinctUntilChanged()
                 .collect{listOfNotes->
-                    _noteInfoList.value = listOfNotes
-
+                    stateFlow.value = listOfNotes
                 }
         }
     }
@@ -44,5 +41,4 @@ class NoteViewModel @Inject constructor(private val repository: NoteRepository) 
     fun deleteNote(note: NoteInfo) = viewModelScope.launch {
         repository.deleteNote(note)
     }
-
 }
