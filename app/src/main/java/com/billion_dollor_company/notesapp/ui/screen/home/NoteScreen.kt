@@ -1,4 +1,4 @@
-package com.billion_dollor_company.notesapp.ui.screen
+package com.billion_dollor_company.notesapp.ui.screen.home
 
 import android.os.Build
 import android.widget.Toast
@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import com.billion_dollor_company.notesapp.model.NoteInfo
 import com.billion_dollor_company.notesapp.ui.components.NoteInputTextField
 import com.billion_dollor_company.notesapp.util.formatDate
-import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

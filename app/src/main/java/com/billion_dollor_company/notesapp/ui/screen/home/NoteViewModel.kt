@@ -1,4 +1,4 @@
-package com.billion_dollor_company.notesapp.ui.screen
+package com.billion_dollor_company.notesapp.ui.screen.home
 
 import android.os.Build
 import android.util.Log

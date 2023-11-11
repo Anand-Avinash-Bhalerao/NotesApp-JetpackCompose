@@ -8,9 +8,8 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.billion_dollor_company.notesapp.ui.screen.NoteScreen
-import com.billion_dollor_company.notesapp.ui.screen.NoteViewModel
+import com.billion_dollor_company.notesapp.ui.screen.home.NoteScreen
+import com.billion_dollor_company.notesapp.ui.screen.home.NoteViewModel
 import com.billion_dollor_company.notesapp.ui.theme.NotesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
