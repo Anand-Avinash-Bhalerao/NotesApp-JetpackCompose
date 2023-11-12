@@ -1,6 +1,7 @@
 package com.billion_dollor_company.notesapp.util
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
@@ -8,9 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.billion_dollor_company.notesapp.ui.screen.addNote.AddScreen
 import com.billion_dollor_company.notesapp.ui.screen.home.HomeScreen
-import com.billion_dollor_company.notesapp.ui.screen.readNote.ReadScreen
+import com.billion_dollor_company.notesapp.ui.screen.readNote.EditScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -26,34 +26,27 @@ fun Navigation() {
         ) {
             HomeScreen(
                 onNoteClicked = { uuid ->
-                    navController.navigate("${Screens.ReadScreen.name}/${uuid}")
+                    Log.d(Constants.DTAG, "uuid in navigation is:{$uuid}")
+                    navController.navigate("${Screens.EditScreen.name}?uuid=${uuid}")
                 },
                 addNote = {
-                    navController.navigate(Screens.AddScreen.name)
+                    navController.navigate(Screens.EditScreen.name)
                 }
             )
         }
         composable(
-            route = Screens.AddScreen.name
-        ) {
-            AddScreen(
-                onBackPressed = {
-                    navController.navigateUp()
-                }
-            )
-        }
-        composable(
-            route = "${Screens.ReadScreen.name}/{uuid}",
+            route = "${Screens.EditScreen.name}?uuid={uuid}",
             arguments = listOf(
                 navArgument(
                     name = "uuid"
                 ) {
                     type = NavType.StringType
+                    defaultValue = ""
                 }
             )
 
         ) {
-            ReadScreen(
+            EditScreen(
                 onBackPressed = {
                     navController.navigateUp()
                 }

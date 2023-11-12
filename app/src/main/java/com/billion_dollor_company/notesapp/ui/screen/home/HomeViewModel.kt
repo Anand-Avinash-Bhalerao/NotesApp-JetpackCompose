@@ -30,8 +30,9 @@ class HomeViewModel @Inject constructor(private val repository: NoteRepository) 
         }
     }
 
-    fun addNote(note: NoteInfo) = viewModelScope.launch {
-        repository.addNote(note)
+
+    fun deleteNote(note: NoteInfo) = viewModelScope.launch{
+        repository.deleteNote(note)
     }
 
 }
