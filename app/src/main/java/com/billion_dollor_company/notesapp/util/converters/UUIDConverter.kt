@@ -1,4 +1,4 @@
-package com.billion_dollor_company.notesapp.util
+package com.billion_dollor_company.notesapp.util.converters
 
 import androidx.room.TypeConverter
 import java.util.UUID

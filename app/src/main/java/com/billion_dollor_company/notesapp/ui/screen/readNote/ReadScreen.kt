@@ -1,4 +1,4 @@
-package com.billion_dollor_company.notesapp.ui.screen.addNote
+package com.billion_dollor_company.notesapp.ui.screen.readNote
 
 import android.os.Build
 import android.widget.Toast
@@ -32,23 +32,24 @@ import com.billion_dollor_company.notesapp.ui.components.NoteInputTextField
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddScreen(
+fun ReadScreen(
     onBackPressed: () -> Unit
 ) {
-    val viewModel: AddViewModel = hiltViewModel()
+    val viewModel: ReadScreenViewModel = hiltViewModel()
     OuterStructure(
         viewModel = viewModel,
         onBackPressed = onBackPressed
     ) {
-        MainContent()
+        MainContent(viewModel)
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun OuterStructure(
-    viewModel: AddViewModel,
+    viewModel: ReadScreenViewModel,
     onBackPressed: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -62,7 +63,7 @@ private fun OuterStructure(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Add Note"
+                            text = "Edit Note"
                         )
                     },
                     navigationIcon = {
@@ -86,7 +87,7 @@ private fun OuterStructure(
                         IconButton(
                             onClick = {
                                 if (viewModel.title.isNotEmpty() && viewModel.description.isNotEmpty()) {
-                                    viewModel.addNote()
+                                    viewModel.updateNote()
                                     onBackPressed()
                                 } else {
                                     Toast.makeText(
@@ -119,8 +120,9 @@ private fun OuterStructure(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-private fun MainContent() {
-    val viewModel: AddViewModel = hiltViewModel()
+private fun MainContent(
+    viewModel: ReadScreenViewModel
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,7 +138,7 @@ private fun MainContent() {
             imeAction = ImeAction.Next,
             modifier = Modifier.fillMaxWidth(),
             maxLine = 1,
-            style = MaterialTheme.typography.displaySmall,
+            style = MaterialTheme.typography.displaySmall
         )
         NoteInputTextField(
             placeHolder = "Add a note",
@@ -148,7 +150,7 @@ private fun MainContent() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 
