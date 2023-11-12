@@ -1,6 +1,7 @@
 package com.billion_dollor_company.notesapp.ui.screen.readNote
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,32 +15,44 @@ import com.billion_dollor_company.notesapp.util.Constants
 import com.billion_dollor_company.notesapp.util.converters.UUIDConverter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class ReadScreenViewModel @Inject constructor(
+class EditScreenViewModel @Inject constructor(
     private val repository: NoteRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val uuid = savedStateHandle.get<String>(Constants.Navigation.UUID) ?: ""
+
     var title by mutableStateOf("")
     var description by mutableStateOf("")
+    var pageTitle by mutableStateOf("")
 
     init {
-        viewModelScope.launch {
-            if (uuid.isNotEmpty()) {
-                val note = repository.getNoteByUUID(UUIDConverter().uuidFromString(uuid))
-                title = note.title
-                description = note.description
+        Log.d(Constants.DTAG, "uuid is:{$uuid}")
+        if (uuid != "") {
+            viewModelScope.launch {
+                if (uuid.isNotEmpty()) {
+                    val note = repository.getNoteByUUID(UUIDConverter().uuidFromString(uuid))
+                    title = note.title
+                    description = note.description
+                }
             }
+            pageTitle = "Edit Note"
+        } else {
+            pageTitle = "Add Note"
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateNote() = viewModelScope.launch {
-        repository.updateNote(
+    fun addOrUpdateNote() = viewModelScope.launch {
+        repository.addOrUpdateNote(
             NoteInfo(
-                uid = UUIDConverter().uuidFromString(uuid),
+                uid = if (uuid != "")
+                    UUIDConverter().uuidFromString(uuid)
+                else
+                    UUID.randomUUID(),
                 title = title,
                 description = description
             )

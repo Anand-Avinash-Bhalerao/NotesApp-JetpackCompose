@@ -2,7 +2,8 @@ package com.billion_dollor_company.notesapp.ui.screen.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +33,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +45,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.billion_dollor_company.notesapp.model.NoteInfo
+import com.billion_dollor_company.notesapp.ui.components.OpenDialog
+import com.billion_dollor_company.notesapp.util.converters.UUIDConverter
 import com.billion_dollor_company.notesapp.util.formatDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -48,8 +56,30 @@ fun HomeScreen(
     onNoteClicked: (String) -> Unit,
     addNote: () -> Unit
 ) {
-    val homeViewModel: HomeViewModel = hiltViewModel()
-    val notesList = homeViewModel.noteInfoList.collectAsState().value
+    val viewModel: HomeViewModel = hiltViewModel()
+    val notesList = viewModel.noteInfoList.collectAsState().value
+    val openAlertDialog = remember {
+        mutableStateOf(false)
+    }
+    var currentSelectedNote by remember {
+        mutableStateOf<NoteInfo?>(null)
+    }
+    if (openAlertDialog.value) {
+        OpenDialog(
+            onDismissRequest = {
+                openAlertDialog.value = false
+            },
+            onConfirmation = {
+                openAlertDialog.value = false
+                if (currentSelectedNote != null) {
+                    viewModel.deleteNote(currentSelectedNote!!)
+                }
+            },
+            dialogTitle = "Delete",
+            dialogText = "Are you sure you want to delete this note permanently?",
+            icon = Icons.Default.Delete
+        )
+    }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -101,7 +131,11 @@ fun HomeScreen(
                             items(notesList) { note ->
                                 InfoCard(
                                     noteInfo = note,
-                                    onNoteClicked = onNoteClicked
+                                    onNoteClicked = onNoteClicked,
+                                    onLongClicked = {
+                                        openAlertDialog.value = true
+                                        currentSelectedNote = note
+                                    }
                                 )
                             }
                         }
@@ -112,19 +146,27 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InfoCard(
     noteInfo: NoteInfo = NoteInfo(title = "Anand", description = "My name is Anand"),
-    onNoteClicked: (String) -> Unit
+    onNoteClicked: (String) -> Unit,
+    onLongClicked: () -> Unit
 ) {
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(corner = CornerSize(12.dp)))
-            .clickable {
-                onNoteClicked(noteInfo.uid.toString())
-            }
+            .combinedClickable(
+                onClick = {
+                    onNoteClicked(UUIDConverter().fromUUID(noteInfo.uid))
+                },
+                onLongClick = {
+                    onLongClicked()
+                }
+            )
     ) {
         Card(
             shape = RoundedCornerShape(corner = CornerSize(12.dp))
