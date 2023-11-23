@@ -24,14 +24,14 @@ class HomeViewModel @Inject constructor(private val repository: NoteRepository) 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllNotes().distinctUntilChanged()
-                .collect{listOfNotes->
+                .collect { listOfNotes ->
                     stateFlow.value = listOfNotes
                 }
         }
     }
 
 
-    fun deleteNote(note: NoteInfo) = viewModelScope.launch{
+    fun deleteNote(note: NoteInfo) = viewModelScope.launch {
         repository.deleteNote(note)
     }
 

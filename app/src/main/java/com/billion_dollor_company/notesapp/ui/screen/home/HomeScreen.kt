@@ -3,14 +3,17 @@ package com.billion_dollor_company.notesapp.ui.screen.home
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -41,9 +44,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.billion_dollor_company.notesapp.R
 import com.billion_dollor_company.notesapp.model.NoteInfo
 import com.billion_dollor_company.notesapp.ui.components.OpenDialog
 import com.billion_dollor_company.notesapp.util.converters.UUIDConverter
@@ -57,7 +64,9 @@ fun HomeScreen(
     addNote: () -> Unit
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
-    val notesList = viewModel.noteInfoList.collectAsState().value
+    val notesList = viewModel.noteInfoList.collectAsState().value.sortedBy {
+        it.entryDate
+    }.reversed()
     val openAlertDialog = remember {
         mutableStateOf(false)
     }
@@ -117,29 +126,57 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(it)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LazyVerticalStaggeredGrid(
-                        columns = StaggeredGridCells.Fixed(2),
-                        verticalItemSpacing = 8.dp,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        content = {
-                            items(notesList) { note ->
-                                InfoCard(
-                                    noteInfo = note,
-                                    onNoteClicked = onNoteClicked,
-                                    onLongClicked = {
-                                        openAlertDialog.value = true
-                                        currentSelectedNote = note
-                                    }
-                                )
+                if (notesList.isNotEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        LazyVerticalStaggeredGrid(
+                            columns = StaggeredGridCells.Fixed(2),
+                            verticalItemSpacing = 8.dp,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            content = {
+                                items(notesList) { note ->
+                                    InfoCard(
+                                        noteInfo = note,
+                                        onNoteClicked = onNoteClicked,
+                                        onLongClicked = {
+                                            openAlertDialog.value = true
+                                            currentSelectedNote = note
+                                        }
+                                    )
+                                }
                             }
+                        )
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column (
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Image(
+                                painter = painterResource(id = R.drawable.empty_kitty),
+                                contentDescription = "Empty",
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .height(200.dp)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = "Khali hai :P",
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.displaySmall
+                            )
+                            
                         }
-                    )
+                    }
                 }
             }
         }
@@ -190,6 +227,8 @@ fun InfoCard(
                         .fillMaxWidth(),
                     text = noteInfo.description,
                     style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 10,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(

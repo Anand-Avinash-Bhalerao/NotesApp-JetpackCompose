@@ -4,6 +4,7 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -149,6 +150,7 @@ private fun MainContent(
             imeAction = ImeAction.Default,
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight()
                 .padding(top = 12.dp),
             style = MaterialTheme.typography.bodyLarge
         )
