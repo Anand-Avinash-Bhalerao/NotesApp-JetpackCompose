@@ -1,6 +1,6 @@
 package com.billion_dollor_company.notesapp.repository
 
-import com.billion_dollor_company.notesapp.data.NoteDatabaseDAO
+import com.billion_dollor_company.notesapp.data.notes.NoteDatabaseDAO
 import com.billion_dollor_company.notesapp.model.NoteInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

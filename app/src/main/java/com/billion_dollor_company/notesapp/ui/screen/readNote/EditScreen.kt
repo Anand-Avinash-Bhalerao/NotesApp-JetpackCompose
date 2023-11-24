@@ -29,7 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.billion_dollor_company.notesapp.ui.components.NoteInputTextField
+import com.billion_dollor_company.notesapp.ui.components.InputText
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -81,8 +81,8 @@ private fun OuterStructure(
                     },
                     modifier = Modifier
                         .shadow(elevation = 5.dp),
-                    colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
                     ),
                     actions = {
                         IconButton(
@@ -130,7 +130,7 @@ private fun MainContent(
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NoteInputTextField(
+        InputText(
             placeHolder = "Title",
             text = viewModel.title,
             onTextChange = {
@@ -141,7 +141,7 @@ private fun MainContent(
             maxLine = 1,
             style = MaterialTheme.typography.displaySmall
         )
-        NoteInputTextField(
+        InputText(
             placeHolder = "Add a note",
             text = viewModel.description,
             onTextChange = {

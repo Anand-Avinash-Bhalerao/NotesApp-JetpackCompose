@@ -1,14 +1,14 @@
 package com.billion_dollor_company.notesapp.util
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
-fun formatDate(time: Long): String {
-    val date = Date(time)
-    val dateFormat = SimpleDateFormat(
-        "d MMM hh:mm aaa",
-        Locale.getDefault()
-    )
-    return dateFormat.format(date)
+@RequiresApi(Build.VERSION_CODES.O)
+fun formatDate(date: LocalDateTime): String {
+    return date.format(DateTimeFormatter.ofPattern("d MMM hh:mm a"))
 }

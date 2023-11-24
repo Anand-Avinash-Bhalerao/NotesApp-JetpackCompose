@@ -4,8 +4,10 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.billion_dollor_company.notesapp.data.NoteDatabaseDAO
-import com.billion_dollor_company.notesapp.data.NotesDatabase
+import com.billion_dollor_company.notesapp.data.daily_tasks.TasksDatabase
+import com.billion_dollor_company.notesapp.data.daily_tasks.TasksDatabaseDAO
+import com.billion_dollor_company.notesapp.data.notes.NoteDatabaseDAO
+import com.billion_dollor_company.notesapp.data.notes.NotesDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,11 +28,29 @@ object AppModule {
     @RequiresApi(Build.VERSION_CODES.O)
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context): NotesDatabase =
+    fun provideNotesDatabase(@ApplicationContext context: Context): NotesDatabase =
         Room.databaseBuilder(
             context,
             NotesDatabase::class.java,
             "notes_df"
+        ).fallbackToDestructiveMigration()
+            .build()
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @Provides
+    fun providesTasksDAO(tasksDatabase: TasksDatabase): TasksDatabaseDAO = tasksDatabase.taskDAO()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @Provides
+    fun provideTasksDatabase(@ApplicationContext context: Context): TasksDatabase =
+        Room.databaseBuilder(
+            context,
+            TasksDatabase::class.java,
+            "tasks_df"
         ).fallbackToDestructiveMigration()
             .build()
 }
