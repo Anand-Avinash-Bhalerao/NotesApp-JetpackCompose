@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -80,6 +82,7 @@ fun InputText(
 @Composable
 fun OutlinedInputText(
     modifier: Modifier = Modifier,
+    imageVector : ImageVector = Icons.Default.Edit,
     text: String,
     placeHolder: String,
     isSingleLine: Boolean = true,
@@ -102,7 +105,7 @@ fun OutlinedInputText(
         },
         leadingIcon = {
             Icon(
-                imageVector = Icons.Outlined.Edit,
+                imageVector = imageVector,
                 contentDescription = "Add task image icon"
             )
         },

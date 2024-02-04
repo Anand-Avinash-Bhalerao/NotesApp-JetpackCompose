@@ -19,13 +19,15 @@ data class TasksInfo(
     @PrimaryKey
     val uid: UUID = UUID.randomUUID(),
 
-    @ColumnInfo(name = "tasks_title")
+    @ColumnInfo(name = "title")
     val title: String,
 
-    @ColumnInfo(name = "tasks_status")
+    @ColumnInfo(name = "status")
     var status: Boolean = Constants.Tasks.NOT_COMPLETED,
 
-    @ColumnInfo(name = "tasks_date")
-    val entryDate : LocalDateTime = LocalDateTime.now()
+    @ColumnInfo(name = "date")
+    val entryDate: LocalDateTime = LocalDateTime.now(),
 
-    )
+    @ColumnInfo(name = "priority")
+    var priority: Int = Constants.Tasks.LOW_PRIORITY
+)
