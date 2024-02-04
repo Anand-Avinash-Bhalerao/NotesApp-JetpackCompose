@@ -21,10 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.billion_dollor_company.notesapp.model.NoteInfo
-import com.billion_dollor_company.notesapp.ui.screen.components.EmptyLogo
-import com.billion_dollor_company.notesapp.ui.screen.notes.components.NotesInfoCard
-import com.billion_dollor_company.notesapp.ui.screen.components.OpenDialog
+import com.billion_dollor_company.notesapp.ui.components.EmptyLogo
+import com.billion_dollor_company.notesapp.ui.components.NotesInfoCard
+import com.billion_dollor_company.notesapp.ui.components.OpenDialog
 import com.billion_dollor_company.notesapp.ui.screen.components.CommonScaffold
 import com.billion_dollor_company.notesapp.ui.screen.components.ListHolder
 
@@ -32,7 +33,7 @@ import com.billion_dollor_company.notesapp.ui.screen.components.ListHolder
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NotesScreen(
-    viewModel: NotesViewModel,
+    viewModel: NotesViewModel = hiltViewModel(),
     addNote: () -> Unit,
     onNoteClicked: (String) -> Unit
 ) {
@@ -65,7 +66,7 @@ fun NotesScreen(
     }
 
     CommonScaffold(
-        title = "My Notes",
+        title = "Notes",
         onFABClick = { addNote() }
     ) { paddingValues ->
         Box(

@@ -43,10 +43,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.billion_dollor_company.notesapp.model.ToBuyInfo
+import com.billion_dollor_company.notesapp.ui.components.OpenDialog
+import com.billion_dollor_company.notesapp.ui.components.OutlinedInputText
 import com.billion_dollor_company.notesapp.ui.screen.toBuy.components.ToBuyItemCard
-import com.billion_dollor_company.notesapp.ui.screen.components.OpenDialog
-import com.billion_dollor_company.notesapp.ui.screen.components.OutlinedInputText
 import com.billion_dollor_company.notesapp.ui.screen.components.CommonScaffold
 import com.billion_dollor_company.notesapp.ui.screen.components.ListHolder
 
@@ -54,7 +55,7 @@ import com.billion_dollor_company.notesapp.ui.screen.components.ListHolder
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun GroceryScreen(
-    viewModel: ToBuyViewModel
+    viewModel: ToBuyViewModel = hiltViewModel()
 ) {
     val toBuyList = viewModel.toBuyInfoList.collectAsState().value
         .sortedWith(compareBy<ToBuyInfo> { it.status })
@@ -99,7 +100,7 @@ fun GroceryScreen(
     }
 
     CommonScaffold(
-        title = "Items to buy",
+        title = "Checklist",
         onFABClick = {
             openToBuyBottomSheet = true
         }

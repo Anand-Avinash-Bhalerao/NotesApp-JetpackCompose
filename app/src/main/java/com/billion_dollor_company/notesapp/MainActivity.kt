@@ -6,8 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.billion_dollor_company.notesapp.ui.screen.temp.RootScreen
 import com.billion_dollor_company.notesapp.ui.theme.NotesAppTheme
-import com.billion_dollor_company.notesapp.util.Navigation
+import com.billion_dollor_company.notesapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             NotesAppTheme {
-                Navigation()
+                RootScreen()
             }
         }
     }

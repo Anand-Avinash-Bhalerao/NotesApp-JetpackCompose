@@ -17,12 +17,12 @@ data class NoteInfo(
     @PrimaryKey
     val uid: UUID = UUID.randomUUID(),
 
-    @ColumnInfo(name = "note_title")
+    @ColumnInfo(name = "title")
     val title: String,
 
-    @ColumnInfo(name = "note_description")
+    @ColumnInfo(name = "description")
     val description: String,
 
-    @ColumnInfo(name = "note_date")
+    @ColumnInfo(name = "date")
     val entryDate : LocalDateTime = LocalDateTime.now()
 )

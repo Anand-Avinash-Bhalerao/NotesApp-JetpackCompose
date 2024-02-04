@@ -59,8 +59,7 @@ fun TaskCard(
                 color = if (shouldStrikeThrough and isChecked) Color.DarkGray else MaterialTheme.colorScheme.onSurface
             ),
             modifier = Modifier
-//                .width(260.dp)
-
+                .weight(1f)
                 .padding(horizontal = 16.dp)
         )
         CircleDot(
