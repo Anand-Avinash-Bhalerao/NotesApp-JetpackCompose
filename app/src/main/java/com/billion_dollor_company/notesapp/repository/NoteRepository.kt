@@ -13,8 +13,16 @@ class NoteRepository @Inject constructor(private val noteDatabaseDAO: NoteDataba
 
     suspend fun addOrUpdateNote(note: NoteInfo) = noteDatabaseDAO.insert(note)
     suspend fun deleteNote(note: NoteInfo) = noteDatabaseDAO.delete(note)
-    fun getAllNotes(): Flow<List<NoteInfo>> {
+    suspend fun getAllNotes(): Flow<List<NoteInfo>> {
         return noteDatabaseDAO.getNotes().flowOn(Dispatchers.IO).conflate()
+    }
+
+    suspend fun getAllNotesOfCategory(category: String): Flow<List<NoteInfo>> {
+        return noteDatabaseDAO.getAllNotesOfCategory(category).flowOn(Dispatchers.IO).conflate()
+    }
+
+    suspend fun getAllFavoriteNotes(): Flow<List<NoteInfo>> {
+        return noteDatabaseDAO.getAllFavorites().flowOn(Dispatchers.IO).conflate()
     }
 
     suspend fun getNoteByUUID(uuid: UUID): NoteInfo =

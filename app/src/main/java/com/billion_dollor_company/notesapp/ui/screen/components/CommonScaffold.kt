@@ -1,6 +1,8 @@
 package com.billion_dollor_company.notesapp.ui.screen.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -15,6 +17,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -22,7 +25,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CommonScaffold(
     title: String,
-    onFABClick: () -> Unit,
+    onFloatingButtonClick: () -> Unit,
+    floatingButtonIcon: ImageVector = Icons.Default.Add,
+    actionButton: @Composable RowScope.() -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -42,19 +47,20 @@ fun CommonScaffold(
                     .shadow(elevation = 5.dp),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
-                )
+                ),
+                actions = actionButton
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onFABClick
+                onClick = onFloatingButtonClick
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add,
+                    imageVector = floatingButtonIcon,
                     contentDescription = "Add Item"
                 )
             }
-        }
+        },
     ) {
         content(it)
     }

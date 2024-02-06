@@ -17,6 +17,12 @@ interface NoteDatabaseDAO {
     @Query("SELECT * FROM notes_table where uid =:id")
     suspend fun getNoteById(id : String) : NoteInfo
 
+    @Query("SELECT * FROM notes_table where category =:category")
+    fun getAllNotesOfCategory(category : String) : Flow<List<NoteInfo>>
+
+    @Query("SELECT * FROM notes_table where isFavorite = 1")
+    fun getAllFavorites() : Flow<List<NoteInfo>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(note: NoteInfo)
 

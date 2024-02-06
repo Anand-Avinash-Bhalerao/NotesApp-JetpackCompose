@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.billion_dollor_company.notesapp.util.Constants
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -22,6 +23,12 @@ data class NoteInfo(
 
     @ColumnInfo(name = "description")
     val description: String,
+
+    @ColumnInfo(name = "category")
+    val category: String = Constants.NoteCategories.GENERAL,
+
+    @ColumnInfo(name = "isFavorite")
+    val isFavorite: Boolean,
 
     @ColumnInfo(name = "date")
     val entryDate : LocalDateTime = LocalDateTime.now()

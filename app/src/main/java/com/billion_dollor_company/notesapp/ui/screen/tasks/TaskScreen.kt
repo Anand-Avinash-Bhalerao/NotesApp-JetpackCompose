@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -20,9 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.billion_dollor_company.notesapp.model.TasksInfo
-import com.billion_dollor_company.notesapp.ui.components.OpenDialog
+import com.billion_dollor_company.notesapp.ui.screen.components.ConfirmationDialog
 import com.billion_dollor_company.notesapp.ui.screen.tasks.components.TaskCard
 import com.billion_dollor_company.notesapp.ui.screen.components.CommonScaffold
+import com.billion_dollor_company.notesapp.ui.screen.components.EmptyLogo
 import com.billion_dollor_company.notesapp.ui.screen.components.ListHolder
 import com.billion_dollor_company.notesapp.ui.screen.tasks.components.AddTaskBottomSheet
 import com.billion_dollor_company.notesapp.util.Constants
@@ -48,7 +50,7 @@ fun TaskScreen(
 
     // to delete a selected note.
     if (isDeleteDialogOpen) {
-        OpenDialog(
+        ConfirmationDialog(
             onDismissRequest = {
                 isDeleteDialogOpen = false
             },
@@ -83,9 +85,10 @@ fun TaskScreen(
 
     CommonScaffold(
         title = Constants.Tasks.Labels.PAGE_LABEL,
-        onFABClick = {
+        onFloatingButtonClick = {
             isBottomSheetOpen = true
-        }
+        },
+        floatingButtonIcon = Icons.Default.AddTask
     ) { paddingValues ->
         ListHolder(
             modifier = Modifier
@@ -93,37 +96,41 @@ fun TaskScreen(
                 .padding(horizontal = 8.dp)
                 .padding(top = 8.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
+            if (tasksList.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
 
-            ) {
-                items(
-                    items = tasksList,
-                    key = {
-                        it.uid
-                    }
-                ) { task ->
-                    var isChecked by remember {
-                        mutableStateOf(task.status)
-                    }
-                    TaskCard(
-                        modifier = Modifier
-                            .animateItemPlacement(),
-                        title = task.title,
-                        isChecked = isChecked,
-                        shouldStrikeThrough = true,
-                        onClicked = {
-                            isChecked = !isChecked
-                            viewModel.setTaskStatus(task)
-                        },
-                        taskPriority = task.priority,
-                        onLongClicked = {
-                            isDeleteDialogOpen = true
-                            currentSelectedTask = task
+                ) {
+                    items(
+                        items = tasksList,
+                        key = {
+                            it.uid
                         }
-                    )
+                    ) { task ->
+                        var isChecked by remember {
+                            mutableStateOf(task.status)
+                        }
+                        TaskCard(
+                            modifier = Modifier
+                                .animateItemPlacement(),
+                            title = task.title,
+                            isChecked = isChecked,
+                            shouldStrikeThrough = true,
+                            onClicked = {
+                                isChecked = !isChecked
+                                viewModel.setTaskStatus(task)
+                            },
+                            taskPriority = task.priority,
+                            onLongClicked = {
+                                isDeleteDialogOpen = true
+                                currentSelectedTask = task
+                            }
+                        )
+                    }
                 }
+            }else{
+                EmptyLogo()
             }
         }
     }

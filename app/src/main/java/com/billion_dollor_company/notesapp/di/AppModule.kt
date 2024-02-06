@@ -4,12 +4,10 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.billion_dollor_company.notesapp.data.checklist.CheckListDatabase
-import com.billion_dollor_company.notesapp.data.checklist.CheckListDatabaseDAO
-import com.billion_dollor_company.notesapp.data.daily_tasks.TasksDatabase
-import com.billion_dollor_company.notesapp.data.daily_tasks.TasksDatabaseDAO
-import com.billion_dollor_company.notesapp.data.grocery.ToBuyDatabase
-import com.billion_dollor_company.notesapp.data.grocery.ToBuyDatabaseDAO
+import com.billion_dollor_company.notesapp.data.tasks.TasksDatabase
+import com.billion_dollor_company.notesapp.data.tasks.TasksDatabaseDAO
+import com.billion_dollor_company.notesapp.data.checklist.ChecklistDatabase
+import com.billion_dollor_company.notesapp.data.checklist.ChecklistDatabaseDAO
 import com.billion_dollor_company.notesapp.data.notes.NoteDatabaseDAO
 import com.billion_dollor_company.notesapp.data.notes.NotesDatabase
 import dagger.Module
@@ -59,36 +57,21 @@ object AppModule {
             .build()
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Singleton
-    @Provides
-    fun providesChecklistDAO(checkListDatabase: CheckListDatabase): CheckListDatabaseDAO = checkListDatabase.checkListDAO()
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Singleton
     @Provides
-    fun providesCheckListDatabase(@ApplicationContext context: Context): CheckListDatabase =
+    fun providesChecklistDAO(checkListDatabase: ChecklistDatabase): ChecklistDatabaseDAO = checkListDatabase.checklistDAO()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Singleton
+    @Provides
+    fun providesCheckListDatabase(@ApplicationContext context: Context): ChecklistDatabase =
         Room.databaseBuilder(
             context,
-            CheckListDatabase::class.java,
+            ChecklistDatabase::class.java,
             "checklist_df"
-        ).fallbackToDestructiveMigration()
-            .build()
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Singleton
-    @Provides
-    fun providesToBuyDatabaseDAO(toBuyDatabase: ToBuyDatabase): ToBuyDatabaseDAO = toBuyDatabase.toBuyDAO()
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Singleton
-    @Provides
-    fun providesToBuyDatabase(@ApplicationContext context: Context): ToBuyDatabase =
-        Room.databaseBuilder(
-            context,
-            ToBuyDatabase::class.java,
-            "toBuy_df"
         ).fallbackToDestructiveMigration()
             .build()
 }

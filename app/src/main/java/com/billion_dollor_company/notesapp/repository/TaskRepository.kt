@@ -1,6 +1,6 @@
 package com.billion_dollor_company.notesapp.repository
 
-import com.billion_dollor_company.notesapp.data.daily_tasks.TasksDatabaseDAO
+import com.billion_dollor_company.notesapp.data.tasks.TasksDatabaseDAO
 import com.billion_dollor_company.notesapp.model.TasksInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
