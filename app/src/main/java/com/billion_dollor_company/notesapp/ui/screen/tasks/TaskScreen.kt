@@ -10,7 +10,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,7 +34,7 @@ import com.billion_dollor_company.notesapp.ui.screen.components.ListHolder
 import com.billion_dollor_company.notesapp.ui.screen.tasks.components.AddTaskBottomSheet
 import com.billion_dollor_company.notesapp.util.Constants
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TaskScreen(
@@ -46,6 +51,10 @@ fun TaskScreen(
 
     var currentSelectedTask by remember {
         mutableStateOf<TasksInfo?>(null)
+    }
+
+    var isTopAppBarMenuExpanded by remember {
+        mutableStateOf(false)
     }
 
     // to delete a selected note.
@@ -88,7 +97,41 @@ fun TaskScreen(
         onFloatingButtonClick = {
             isBottomSheetOpen = true
         },
-        floatingButtonIcon = Icons.Default.AddTask
+        floatingButtonIcon = Icons.Default.AddTask,
+        actionButton = {
+            IconButton(
+                onClick = {
+                    isTopAppBarMenuExpanded = !isTopAppBarMenuExpanded
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Tasks menu"
+                )
+            }
+            DropdownMenu(
+                expanded = isTopAppBarMenuExpanded,
+                onDismissRequest = {
+                    isTopAppBarMenuExpanded = false
+                }
+            ) {
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "Delete all completed tasks")
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete all completed icon"
+                        )
+                    },
+                    onClick = {
+                        isTopAppBarMenuExpanded = false
+                        viewModel.deleteAllCompletedTasks()
+                    }
+                )
+            }
+        }
     ) { paddingValues ->
         ListHolder(
             modifier = Modifier
@@ -129,8 +172,10 @@ fun TaskScreen(
                         )
                     }
                 }
-            }else{
-                EmptyLogo()
+            } else {
+                EmptyLogo(
+                    displayedString = "No task found!\nGood job!"
+                )
             }
         }
     }

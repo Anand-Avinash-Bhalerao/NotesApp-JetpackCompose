@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.billion_dollor_company.notesapp.model.TasksInfo
-import com.billion_dollor_company.notesapp.repository.NoteRepository
 import com.billion_dollor_company.notesapp.repository.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +24,15 @@ class TasksViewModel @Inject constructor(
     val taskInfoList = tasksStateFlow.asStateFlow()
 
     init {
+        getAllTasks()
+    }
 
+    private fun getAllTasks() {
         viewModelScope.launch(Dispatchers.IO) {
             taskRepository.getAllTasks().distinctUntilChanged()
                 .collect { listOfTasks ->
                     tasksStateFlow.value = listOfTasks
-
                 }
-
         }
     }
 
@@ -44,10 +44,17 @@ class TasksViewModel @Inject constructor(
 
         task.status = !task.status
         taskRepository.addTask(task)
+        tasksStateFlow.value =
+            tasksStateFlow.value.sortedWith(compareBy<TasksInfo> { it.status }.thenBy { it.priority }
+                .thenBy { it.title })
     }
 
     fun deleteTask(task: TasksInfo) = viewModelScope.launch {
         taskRepository.deleteTask(task)
+    }
+
+    fun deleteAllCompletedTasks() = viewModelScope.launch {
+        taskRepository.deleteCompletedTasks()
     }
 
 }

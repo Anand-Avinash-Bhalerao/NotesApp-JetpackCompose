@@ -110,7 +110,6 @@ fun NotesScreen(
             contentAlignment = Alignment.Center
         ) {
             ListHolder {
-
                 var categoryInfoList = mutableListOf(
                     Constants.NoteCategories.PERSONAL,
                     Constants.NoteCategories.PROJECTS,
@@ -195,28 +194,34 @@ fun NotesScreen(
                         )
                     }
                 }
+                if (notesList.isNotEmpty()) {
 
 
-                LazyVerticalStaggeredGrid(
-                    columns = StaggeredGridCells.Fixed(2),
-                    verticalItemSpacing = 10.dp,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(10.dp),
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    content = {
-                        items(notesList) { note ->
-                            NotesInfoCard(
-                                noteInfo = note,
-                                onNoteClicked = onNoteClicked,
-                                onLongClicked = {
-                                    openAlertDialog.value = true
-                                    currentSelectedNote = note
-                                }
-                            )
+                    LazyVerticalStaggeredGrid(
+                        columns = StaggeredGridCells.Fixed(2),
+                        verticalItemSpacing = 10.dp,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        contentPadding = PaddingValues(10.dp),
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        content = {
+                            items(notesList) { note ->
+                                NotesInfoCard(
+                                    noteInfo = note,
+                                    onNoteClicked = onNoteClicked,
+                                    onLongClicked = {
+                                        openAlertDialog.value = true
+                                        currentSelectedNote = note
+                                    }
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                } else {
+                    EmptyLogo(
+                        displayedString = "No note found!"
+                    )
+                }
             }
 
         }

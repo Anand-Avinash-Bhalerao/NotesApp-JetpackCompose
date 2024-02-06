@@ -40,4 +40,8 @@ class ChecklistViewModel @Inject constructor(
     fun deleteItem(checklistInfo: ChecklistInfo) = viewModelScope.launch {
         checklistRepository.deleteItem(checklistInfo)
     }
+
+    fun deleteAllCompletedItems() = viewModelScope.launch {
+        checklistRepository.deleteCompletedItems()
+    }
 }

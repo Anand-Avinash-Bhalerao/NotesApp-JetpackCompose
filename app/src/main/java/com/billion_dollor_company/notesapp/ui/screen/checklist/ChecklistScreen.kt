@@ -9,7 +9,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,6 +30,7 @@ import com.billion_dollor_company.notesapp.ui.screen.components.ConfirmationDial
 import com.billion_dollor_company.notesapp.ui.screen.checklist.components.AddChecklistItemBottomSheet
 import com.billion_dollor_company.notesapp.ui.screen.checklist.components.ChecklistItemCard
 import com.billion_dollor_company.notesapp.ui.screen.components.CommonScaffold
+import com.billion_dollor_company.notesapp.ui.screen.components.EmptyLogo
 import com.billion_dollor_company.notesapp.ui.screen.components.ListHolder
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,6 +47,10 @@ fun ChecklistScreen(
     }
     var currentSelectedItem by remember {
         mutableStateOf<ChecklistInfo?>(null)
+    }
+
+    var isTopAppBarMenuExpanded by remember {
+        mutableStateOf(false)
     }
 
     // to delete a selected note.
@@ -80,6 +91,40 @@ fun ChecklistScreen(
         title = "Checklist",
         onFloatingButtonClick = {
             isBottomSheetOpen = true
+        },
+        actionButton = {
+            IconButton(
+                onClick = {
+                    isTopAppBarMenuExpanded = !isTopAppBarMenuExpanded
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Tasks menu"
+                )
+            }
+            DropdownMenu(
+                expanded = isTopAppBarMenuExpanded,
+                onDismissRequest = {
+                    isTopAppBarMenuExpanded = false
+                }
+            ) {
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "Delete all completed items")
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete all completed icon"
+                        )
+                    },
+                    onClick = {
+                        isTopAppBarMenuExpanded = false
+                        viewModel.deleteAllCompletedItems()
+                    }
+                )
+            }
         }
     )
     { paddingValues ->
@@ -89,36 +134,40 @@ fun ChecklistScreen(
                 .padding(horizontal = 8.dp)
                 .padding(top = 8.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
+            if (checklistList.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
 
-            ) {
-                items(
-                    items = checklistList,
-                    key = {
-                        it.uid
-                    }
-                ) { item ->
-                    var isItemCompleted by remember {
-                        mutableStateOf(item.status)
-                    }
-                    ChecklistItemCard(
-                        modifier = Modifier
-                            .animateItemPlacement(),
-                        title = item.name,
-                        isChecked = isItemCompleted,
-                        shouldStrikeThrough = true,
-                        onClicked = {
-                            isItemCompleted = !isItemCompleted
-                            viewModel.setItemStatus(item)
-                        },
-                        onLongClicked = {
-                            isDeleteDialogOpen = true
-                            currentSelectedItem = item
+                ) {
+                    items(
+                        items = checklistList,
+                        key = {
+                            it.uid
                         }
-                    )
+                    ) { item ->
+                        var isItemCompleted by remember {
+                            mutableStateOf(item.status)
+                        }
+                        ChecklistItemCard(
+                            modifier = Modifier
+                                .animateItemPlacement(),
+                            title = item.name,
+                            isChecked = isItemCompleted,
+                            shouldStrikeThrough = true,
+                            onClicked = {
+                                isItemCompleted = !isItemCompleted
+                                viewModel.setItemStatus(item)
+                            },
+                            onLongClicked = {
+                                isDeleteDialogOpen = true
+                                currentSelectedItem = item
+                            }
+                        )
+                    }
                 }
+            } else {
+                EmptyLogo()
             }
         }
     }

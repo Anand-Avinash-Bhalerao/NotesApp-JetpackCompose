@@ -21,6 +21,9 @@ interface TasksDatabaseDAO {
     @Delete
     suspend fun delete(task : TasksInfo)
 
+    @Query("DELETE FROM tasks_table WHERE status = 1")
+    suspend fun deleteCompletedTasks()
+
     @Update
     suspend fun update(task : TasksInfo)
 }

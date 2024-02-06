@@ -21,6 +21,10 @@ interface ChecklistDatabaseDAO {
     @Delete
     suspend fun delete(checklistInfo : ChecklistInfo)
 
+
+    @Query("DELETE FROM checklist_table WHERE status = 1")
+    suspend fun deleteCompletedItems()
+
     @Update
     suspend fun update(checklistInfo : ChecklistInfo)
 }

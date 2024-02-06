@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -22,12 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.billion_dollor_company.notesapp.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun EmptyLogo() {
+fun EmptyLogo(
+    displayedString: String = "Nothing found!"
+) {
     var isLoading by remember { mutableStateOf(true) }
     Box(
         modifier = Modifier
@@ -35,7 +43,7 @@ fun EmptyLogo() {
     ) {
 
         LaunchedEffect(Unit) {
-            delay(2000)
+            delay(500)
             isLoading = false
         }
         Column(
@@ -47,16 +55,23 @@ fun EmptyLogo() {
             if (isLoading) {
                 CircularProgressIndicator()
             } else {
-                Image(
-                    painter = painterResource(id = R.drawable.empty_logo),
-                    contentDescription = "Empty",
-                    modifier = Modifier
-                        .width(250.dp)
-                        .height(250.dp)
+                val catEmptyComposition by rememberLottieComposition(
+                    spec = LottieCompositionSpec.RawRes(
+                        R.raw.cat_for_empty_scrren
+                    )
                 )
+                LottieAnimation(
+                    composition = catEmptyComposition,
+
+                    iterations = LottieConstants.IterateForever,
+                    modifier = Modifier
+                        .size(300.dp)
+                )
+
                 Text(
-                    text = "Nothing found!",
-                    style = MaterialTheme.typography.titleLarge
+                    text = displayedString,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center
                 )
             }
         }

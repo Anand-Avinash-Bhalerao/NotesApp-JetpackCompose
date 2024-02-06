@@ -14,6 +14,8 @@ class TaskRepository @Inject constructor(private val taskDatabaseDAO: TasksDatab
 
     suspend fun setTaskStatus(task: TasksInfo) = taskDatabaseDAO.update(task)
     suspend fun deleteTask(task: TasksInfo) = taskDatabaseDAO.delete(task)
+
+    suspend fun deleteCompletedTasks() = taskDatabaseDAO.deleteCompletedTasks()
     fun getAllTasks(): Flow<List<TasksInfo>> {
         return taskDatabaseDAO.getTasks().flowOn(Dispatchers.IO).conflate()
     }
